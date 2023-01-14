@@ -2,7 +2,7 @@
 ESP32 audio player by using https://github.com/schreibfaul1/ESP32-audioI2S and [BunHMI](https://shop.mcuidea.com/) display
 
 Feature list
-* Stream MP3 from web server to i2s audio amplifier.
+* Play MP3 from SDCard.
 * GUI control interface by using BunHMI display.
 * Select MP3 by rolling bar.
 * Select Next and Prev
@@ -25,6 +25,6 @@ Here is the schematic, which only using few signal wires.
 The "BunHMI" folder includes the BunMaker project. you can open project by BunMaker: https://shop.mcuidea.com/bunmaker
 
 ## ESP32 code
- The "AudioPlayer" folder includes esp32 arduino source code.
+ The "I2Saudio_SDCard" folder includes esp32 arduino source code.
 
 
