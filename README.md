@@ -9,6 +9,9 @@ Feature list
 * Volume control
 * Google Text-to-Speech.
 
+# Youtube Video
+Video description: https://youtu.be/G1XfjwPA9v0
+
 ## Audio output
 This project using MAX98357A as audio output. which only has single channel output. You can add another channel to achieve sterio output easily. Please refer MAX98357A datasheet.
 
