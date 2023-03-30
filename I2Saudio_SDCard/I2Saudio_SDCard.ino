@@ -31,8 +31,8 @@
 #define I2S_LRC 26
 
 Audio audio;
-String ssid = "mculab";
-String password = "24923150";
+String ssid = "wifi_ssid";
+String password = "password";
 
 #define EOT 0x04
 #define HMI Serial2
@@ -63,10 +63,10 @@ uint32_t hashString(const char *key, int length) {
 void hmi_vsw_handler(const char *cmd) {
   if (disp_volpanel) {
     // Hide panVol
-    HMI_CMD("panVol.anim_y(190, 200, 0,1)");
+    HMI_CMD("panVol.anim_y(190, 200, 0,1);");
   } else {
     // Show panVol
-    HMI_CMD("panVol.anim_y(130, 200, 0,1)");
+    HMI_CMD("panVol.anim_y(130, 200, 0,1);");
   }
   disp_volpanel = !disp_volpanel;
   return;
@@ -81,22 +81,22 @@ void hmi_pre_handler(const char *cmd) {
   if (!audio.isRunning()) {
     return;
   }
-  HMI_CMD("ptr(\"MP3:\",pl.selected_str())");
+  HMI_CMD("ptr(\"MP3:\",pl.selected_str());");
 }
 
 void hmi_nxt_handler(const char *cmd) {
   if (!audio.isRunning()) {
     return;
   }
-  HMI_CMD("ptr(\"MP3:\",pl.selected_str())");
+  HMI_CMD("ptr(\"MP3:\",pl.selected_str());");
 }
 
 void hmi_ply_handler(const char *cmd) {
   if (audio.isRunning()) {
     audio.stopSong();
-    HMI_CMD("imgPlay.src(%d)", IMG_ID_PLAY);
+    HMI_CMD("imgPlay.src(%d);", IMG_ID_PLAY);
   } else {
-    HMI_CMD("ptr(\"MP3:\",pl.selected_str());imgPlay.src(%d)", IMG_ID_STOP);
+    HMI_CMD("ptr(\"MP3:\",pl.selected_str());imgPlay.src(%d);", IMG_ID_STOP);
   }
 }
 
@@ -156,7 +156,7 @@ void updatePlaylist(File dir) {
   int cnt = 0;
 
   // Clear play list
-  HMI_CMD("pl.options(\"\")");
+  HMI_CMD("pl.options(\"\");");
   while (true) {
     File entry = dir.openNextFile();
     if (!entry) {
@@ -179,7 +179,7 @@ void updatePlaylist(File dir) {
     }
     entry.close();
   }
-  HMI_CMD("pl.options(\"%s\")", buff);
+  HMI_CMD("pl.options(\"%s\");", buff);
 }
 
 /**
@@ -191,10 +191,10 @@ bool timer_tick(void *) {
     if (durTime > 0) {
       if (durationTime == 0) {
         durationTime = durTime;
-        HMI_CMD("playTime.range(0,%d)", durationTime);
+        HMI_CMD("playTime.range(0,%d);", durationTime);
       }
       int curTime = audio.getAudioCurrentTime();
-      HMI_CMD("playTime.val(%d); labDur.text(\"%d/%d\")", curTime, curTime, durationTime);
+      HMI_CMD("playTime.val(%d); labDur.text(\"%d/%d\");", curTime, curTime, durationTime);
     }
   }
   return true;
@@ -237,24 +237,24 @@ void setup() {
   audio.setVolume(init_vol);  // 0...21
 
   // Reset HMI status
-  HMI_CMD("playTime.val(0)");
-  HMI_CMD("vol.range(0,21);vol.val(%d)", init_vol);
-  HMI_CMD("imgPlay.src(%d)", IMG_ID_PLAY);
+  HMI_CMD("playTime.val(0);");
+  HMI_CMD("vol.range(0,21);vol.val(%d);", init_vol);
+  HMI_CMD("imgPlay.src(%d);", IMG_ID_PLAY);
 
   File root = SD.open("/");
   updatePlaylist(root);
 
   // Init wifi and set labstat text
-  HMI_CMD("labstat.text(\"Start Wifi...\")");
+  HMI_CMD("labstat.text(\"Start Wifi...\");");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid.c_str(), password.c_str());
   int cnt = 0;
   // Connect to wifi AP
   while (WiFi.status() != WL_CONNECTED) {
     delay(100);
-    HMI_CMD("labstat.text(\"Wifi Conn:%d...\")", (cnt++) / 10);
+    HMI_CMD("labstat.text(\"Wifi Conn:%d...\");", (cnt++) / 10);
   }
-  HMI_CMD("labstat.text(\"Wifi Linked\")");
+  HMI_CMD("labstat.text(\"Wifi Linked\");");
   
   // Cal hash of cmd table
   init_hmi_cmd_hash();
@@ -351,7 +351,7 @@ void audio_id3data(const char *info) {  //id3 metadata
   Serial.println(info);
 }
 void audio_eof_mp3(const char *info) {  //end of file
-  HMI_CMD("imgPlay.src(%d)", IMG_ID_PLAY);
+  HMI_CMD("imgPlay.src(%d);", IMG_ID_PLAY);
   Serial.print("eof_mp3     ");
   Serial.println(info);
 }
